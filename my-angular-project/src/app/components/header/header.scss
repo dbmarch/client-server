@@ -1,0 +1,30 @@
+@use '@angular/material' as mat;
+
+.mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: var(--mat-sys-inverse-primary);
+  padding: 0  16px;
+  display: flex;
+  justify-content:space-around;
+  align-items: center;
+  color: var(--mat-sys-primary);
+  font-size: --mat-sys-display-small-font;
+} 
+
+.nav-left {
+   display: flex;
+   align-items: center;
+   justify-content:left;
+}
+
+.nav-right {
+   margin-left: auto;
+   display: flex;
+   align-items: center;
+   justify-content:right;
+}
+.header-element {
+  margin-right: 16px;
+}
