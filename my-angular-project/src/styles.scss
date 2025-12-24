@@ -5,7 +5,7 @@
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 @use './app/styles/themes/theme.scss' as theme;
-@import 'material-symbols';
+@use 'material-symbols';
 
 
 body {
