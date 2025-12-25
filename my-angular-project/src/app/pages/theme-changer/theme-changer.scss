@@ -1,9 +1,9 @@
 :host {
    .center-page {
-      margin-top: 50px;
+      margin-top: 25px;
       display: flex;
-      justify-content: center;
-      align-items:flex-start;
+      flex-direction: column;
+      align-items:center;
       min-height: 100vh;
    }
 

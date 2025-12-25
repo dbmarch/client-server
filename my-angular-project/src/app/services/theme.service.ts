@@ -32,25 +32,26 @@ export class ThemeService {
     const savedThemeString = localStorage.getItem(this.localStorageThemeKey);
     if (savedThemeString) {
       theme = JSON.parse(savedThemeString);
-    }else{
-      this.saveTheme(this.currentTheme);
     }
-    this.#selectedScheme.set(theme.scheme ? theme.scheme : this.#selectedScheme());
-    this.#selectedColor.set(theme.color ? theme.color : this.#selectedColor());
+    this.#selectedScheme.set(theme.scheme ?? this.#selectedScheme());
+    this.#selectedColor.set(theme.color ?? this.#selectedColor());
+    this.saveTheme(this.currentTheme);
     console.log ('currentTheme', this.currentTheme);
+ 
+    // Apply the scheme
     effect(()=>{
       const schemes =  this.possibleSchemes.map(obj => obj.scheme);
       document.body.classList.remove(...schemes);
       document.body.classList.add(this.#selectedScheme().scheme);
-      console.log ('adding class', this.#selectedScheme().scheme);
+      // console.log ('adding class', this.#selectedScheme().scheme);
     });
 
+    // Apply the color
     effect(()=>{
       const colors = this.possibleColors.map(obj => obj.palette);
       document.body.classList.remove(...colors);
-      console.log ('removing ', ...colors)
       document.body.classList.add(this.#selectedColor().palette);
-      console.log ('adding ', this.#selectedColor().palette)
+      // console.log ('adding ', this.#selectedColor().palette)
     });
    }
 
@@ -62,7 +63,6 @@ export class ThemeService {
       console.error ('color not found', color);
       console.error ('possible colors', this.possibleColors);
     }
-    console.log ('currentTheme', this.currentTheme);
     this.saveTheme(this.currentTheme);
   }
 
@@ -71,12 +71,12 @@ export class ThemeService {
     if (chosenScheme) {
       this.#selectedScheme.set(chosenScheme);
     }
-    console.log ('currentTheme', this.currentTheme);
     this.saveTheme(this.currentTheme);
   }
 
  
   private saveTheme(theme: Theme) {
+    console.log ('currentTheme', this.currentTheme);    
     localStorage.setItem(this.localStorageThemeKey, JSON.stringify(theme));
   }
 
