@@ -3,10 +3,21 @@
   "version": "1.0.0",
   "description": "Back end project",
   "license": "MIT",
-  "author": "",
+  "author": "Dave March",
   "type": "commonjs",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --exec npm start"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^5.2.1",
+    "morgan": "^1.10.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
   }
 }
