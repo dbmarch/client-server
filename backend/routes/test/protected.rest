@@ -1,0 +1,4 @@
+
+GET http://localhost:3000/api/auth/protected HTTP/1.1
+content-type: application/json
+Authorization: token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhdmUiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTc2Njk1NDUyMCwiZXhwIjoxNzY2OTU4MTIwfQ.sI5YB1OAnuJSD2BjAasGyhV3vS_IeiDYko5ST6jrXmM
