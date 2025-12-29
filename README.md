@@ -1,4 +1,9 @@
-# angular-template
+# client Server
 Angular Setup with Material 
 
-Currently this is a playground.   Looking to have some templates with capabilies i can lift and shift.
+Mongo Database in a docker container
+
+Athentication using JWT
+
+TypeScript nodeJs backend
+
