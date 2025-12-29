@@ -17,7 +17,8 @@ import { LoginService } from '../../services/login.service'
   standalone: true,
   imports: [Field, RouterModule, CommonModule,FieldWrapper, FieldStyleDirective ],
   templateUrl: './login-user.html',
-  styleUrl: './login-user.scss',
+  styleUrls: ['./login-user.scss', '../../styles/forms.scss'],
+
 })
 export class LoginUser {
   readonly model = signal<Login>({
@@ -37,7 +38,7 @@ export class LoginUser {
   onSubmit() {
     submit(this.loginForm, async frm => {
       console.log('starting to submit the form', this.loginForm().value());
-      const res = await this.loginService.submitReview(frm);
+      const res = await this.loginService.login(frm);
       if (!res) {
         this.submittedSuccessfully.set(true);
       }
