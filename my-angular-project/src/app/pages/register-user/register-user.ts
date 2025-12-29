@@ -10,6 +10,7 @@ import {
   Field,
   submit
 } from '@angular/forms/signals';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register-user',
@@ -25,7 +26,8 @@ export class RegisterUser {
   });
   readonly loginService = inject(LoginService);
   readonly submittedSuccessfully = signal(false);
-  
+  readonly router = inject(Router);
+
   readonly registerForm = form(this.model, (path) => {
     required( path.username, {
       message: 'Username is required',
@@ -38,6 +40,8 @@ export class RegisterUser {
       const res = await this.loginService.register(frm);
       if (!res) {
         this.submittedSuccessfully.set(true);
+        this.router.navigate (['..', 'login']);
+
       }
       return res;
     })

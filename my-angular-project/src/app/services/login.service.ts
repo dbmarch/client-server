@@ -47,11 +47,35 @@ export class LoginService {
 
 
     async register(registerForm: FieldTree<Login>) {
-        await new Promise(resolve => setTimeout(resolve, 3000));
         const res: CustomValidationError[] = [];
 
         const register = registerForm().value();
+        console.log ('register ', register)
+        const subscription = this.http.post<Login>(this.baseUrl + '/signup', register)
+            .pipe((
+                map((resData) => (resData as Token).token),
+                catchError((error) => {
+                    console.log(error);
+                    return throwError( () => new Error("unable to register"));
+                })
+            ))
+            .subscribe({
+                next: (token) => {
+                    console.log ('next', token);
+                    return true;
+                },
+                error: (error: Error) => {
+                    console.error('error', error);
+                    return false;
+                },
+                complete: () => {
+                    console.log ('register complete')
+                }
 
+            });
+        this.destroyRef.onDestroy(() => {
+            subscription.unsubscribe();
+        });
         return res.length ? res : undefined;
     }
 }
