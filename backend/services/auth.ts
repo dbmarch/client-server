@@ -3,81 +3,89 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import dotenv from "dotenv";
 import {type User} from '../models/index.ts'
+import {saveUser, retrieveUsers, findUser, deleteUser } from './mongoose.ts'
+import { Login, type LoginDocument } from '../models/login.model.ts';
+
 dotenv.config(); 
 
-const users: User[] = [ ]; // in-memory database to keep things basic for this tutorial
+// Authentication from 
+// https://dev.to/cerbos/authentication-and-authorization-in-nodejs-applications-12fk
 
 
-// *********************************************************
-const login = (req: express.Request, res: express.Response) => {
+//*****************************************************************************
+const login = async (req: express.Request, res: express.Response) => {
    const {
     username,
     password
   } = req.body;
 
-  const user = users.find(user => user.username === username);
+  try {
+    const user = await findUser(username);
+    if (!user) {
+        return res.status(404).json({
+          message: 'User not found'
+        });
+      }
+      console.log ('user', user);
+      const isPasswordValid = bcrypt.compareSync(password, user.password);
+      if (!isPasswordValid) {
+        return res.status(401).json({
+          message: 'Invalid credentials'
+        });
+      }
 
-  if (!user) {
-    return res.status(404).json({
-      message: 'User not found'
-    });
-  }
+      const token = jwt.sign({
+        username: user.username,
+        role: user.role
+      },
+        process.env.JWT_SECRET ?? '', {expiresIn: '1h',}
+      );
 
-  const isPasswordValid = bcrypt.compareSync(password, user.password);
-  if (!isPasswordValid) {
-    return res.status(401).json({
-      message: 'Invalid credentials'
-    });
-  }
-
-  const token = jwt.sign({
-    username: user.username,
-    role: user.role
-  },
-  process.env.JWT_SECRET ?? '', {
-    expiresIn: '1h',
-  });
-
-  res.status(200).json({
-    token
-  });
+      res.status(200).json({token});
+      console.log(`User ${username} signed in`)
+  } catch(err) {
+      console.error('error from saveuser', err);
+      res.status(301).json({
+          message: `User Login failed: ${err}`
+    })
+  } 
 }
 
 
-// *********************************************************
-const signup = (req: express.Request, res: express.Response) => {
+//*****************************************************************************
+const signup = async (req: express.Request, res: express.Response) => {
 
   const { username, password, role } = req.body;
 
-  if (!Array.isArray(role)) {
-    return res.status(400).json({ message: "Role must be an array" });
-  }
-
-  const userExists = users.find(user =>user.username === username);
-  if (userExists) {
-    return res.status(400).json({
-      message: 'User already exists'
-    });
-  }
-
   const hashedPassword = bcrypt.hashSync(password, 8);
 
-  users.push({
-    username,
-    password: hashedPassword,
-    role
-  });
+   const newUser: LoginDocument = new Login({
+      username,
+      password: hashedPassword,
+      role
+    });
 
-  console.log (users);
+  let success = false;
 
-  res.status(201).json({
-    message: 'User registered successfully'
-  });
+  try {
+    await deleteUser(username);
+    await saveUser(newUser);
+    success = true;
+    res.status(201).json({
+       message: 'User registered successfully'
+    });
+  } catch(error) {
+    console.error('error from saveuser');
+    res.status(301).json({
+      message: 'User registration failed'
+    })
+  } 
 };
 
 
-// *********************************************************
+//*****************************************************************************
 function authenticateToken(allowedRoles: string[]) {
+  console.log ('authenticate')
   return (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -88,25 +96,30 @@ function authenticateToken(allowedRoles: string[]) {
       });
     }
 
-    // jwt.verify(token, process.env.JWT_SECRET ?? '', (err, user): jwt.VerifyCallback => {
-    //   if (err) {
-    //     return res.status(403).json({
-    //       message: 'Invalid token'
-    //     });
-    //   }
+    console.log ("verify", token)
+    jwt.verify(token, process.env.JWT_SECRET ?? '', (err, user) => {
+      if (err) {
+        return res.status(403).json({
+          message: 'Invalid token'
+        });
+      }
+      const u: any = user;
+      const role: string = u?.role ?? '';
+      if (!allowedRoles.includes(role)) {
+        console.log ('allowed', allowedRoles);
+        console.log ('logged in as', role);
 
-    //   if (!allowedRoles.includes(user.role?.[0] ?? '')) {
-    //     console.log ('allowed', allowedRoles);
-    //     console.log ('logged in as', user.role);
+        res.status(403).json({
+          message: 'You do not have the correct role'
+        });
+        
+        // @ts-ignore
+        req.user = user;
+        next();
+        
+      }
 
-    //     return res.status(403).json({
-    //       message: 'You do not have the correct role'
-    //     });
-    //   }
-
-    //   req.user = user;
-    //   next();
-    // });
+    });
   };
 }
 export{login, signup, authenticateToken};

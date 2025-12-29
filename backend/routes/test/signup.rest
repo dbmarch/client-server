@@ -5,6 +5,6 @@ content-type: application/json
 {
    "username": "dave",
    "password": "password",
-   "role":    ["admin"]
+   "role":    "admin"
 }
 

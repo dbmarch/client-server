@@ -1,4 +1,6 @@
+# @authToken = {{login.response.headers.X-AuthToken}}
 
 GET http://localhost:3000/api/auth/protected HTTP/1.1
 content-type: application/json
-Authorization: token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhdmUiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTc2Njk2NjI2MiwiZXhwIjoxNzY2OTY5ODYyfQ.ncLPkvRUZ9H4KY01zeYMA-pm9NyMVViV5Mw5Z9kBPsk
+Authorization: token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhdmUiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTc2Njk2ODAxNCwiZXhwIjoxNzY2OTcxNjE0fQ.d0DY2jjWIhj6PZmfhbrH0zRaRp6zGCAZXkyNRWXZriU
+f

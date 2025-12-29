@@ -1,0 +1,19 @@
+services:
+  mongodb:
+    image: mongodb/mongodb-community-server
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_log:/var/log/mongodb
+      - ./mongod.conf:/etc/mongod.conf
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=admin
+      - MONGODB_INITDB_ROOT_PASSWORD=password      
+    command: ['--config', '/etc/mongod.conf']
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+  mongodb_log:
