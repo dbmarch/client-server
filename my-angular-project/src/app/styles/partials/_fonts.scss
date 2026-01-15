@@ -1,0 +1,9 @@
+@mixin load() {
+   @font-face {
+      font-family: 'Roboto';
+         src: url('/fonts/Roboto-VariableFont_wdth,wght.woff2') format('woff2');
+         font-weight: 100 200 300 400 500 600 700 800 900;
+         font-style: normal;
+         font-display: swap;
+   }
+}

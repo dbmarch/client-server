@@ -6,6 +6,10 @@
 @use '@angular/material' as mat;
 @use './app/styles/themes/theme.scss' as theme;
 @use 'material-symbols';
+@use 'partials/fonts.scss';
+
+@include fonts.load();
+
 :root {
   // Imported some css and it needed these defined. 
   // Need to replace the css with our color scheme.
